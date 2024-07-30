@@ -31,6 +31,21 @@ public class LambdaRaw {
 
         System.out.println(stringLength.apply("this is for lambda"));
 
+        //
+        Tester<String> s = () -> "test";
+
+        System.out.println(s.get());
+
+        // Parrot Challenge
+
+        Parrot p1 =  new Parrot("Ziya");
+        Parrot p2 =  new Parrot("Ziya2");
+        Parrot p3 =  new Parrot("Ziya3");
+
+
+        Arrays.asList(p1,p2,p3).stream().forEach(Parrot::sayMyName);
+
+
     }
 
 

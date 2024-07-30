@@ -19,7 +19,6 @@ public class CustomStreamScene {
 
         // Thread havuzu oluşturma
         ExecutorService executorService = Executors.newFixedThreadPool(10);
-
         // Veriyi parçalara bölme ve her parçayı bir Callable olarak tanımlama
         List<Callable<List<Integer>>> tasks = data.stream()
                 .collect(Collectors.groupingBy(i -> (i - 1) / 10))
