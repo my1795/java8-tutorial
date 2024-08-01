@@ -81,7 +81,7 @@ public class PassengerReader {
                 });
     }
 
-    // case 3
+    // case 3 yolculugu en cok On time olan en yakin yarihteki ilk 50 yolcuyu yazdir
     private static void case3(Stream<Passenger> passengerStream){
 
 
