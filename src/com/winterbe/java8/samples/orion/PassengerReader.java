@@ -3,14 +3,14 @@ package com.winterbe.java8.samples.orion;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,19 +57,20 @@ public class PassengerReader {
                 record[14]
         );
     }
+
     // case 1  japon yolcularin bulundugu havalanlarini ve burda bulunan yolcularin sayisini yazdir
-    private static void case1(Stream<Passenger> passengerStream){
-                passengerStream
+    private static void case1(Stream<Passenger> passengerStream) {
+        passengerStream
                 .filter(passenger -> "Japan".equals(passenger.getNationality()))
-                        .collect(Collectors.groupingBy(Passenger::getAirportName, Collectors.counting()))
-                        .forEach((k,v) -> {
-                            System.out.println("Airport: "+k + " Count: "+v);
-                        });
+                .collect(Collectors.groupingBy(Passenger::getAirportName, Collectors.counting()))
+                .forEach((k, v) -> {
+                    System.out.println("Airport: " + k + " Count: " + v);
+                });
 
     }
 
     // case 2  yolculugu en cok iptal olan milliyetteki yolculari yazdir
-    private static void case2(Stream<Passenger> passengerStream){
+    private static void case2(Stream<Passenger> passengerStream) {
         passengerStream
                 .filter(passenger -> "Cancelled".equals(passenger.getFlightStatus())) // Assuming "Canceled" indicates a canceled flight
                 .collect(Collectors.groupingBy(Passenger::getNationality, Collectors.counting()))
@@ -84,6 +85,19 @@ public class PassengerReader {
     // case 3 yolculugu en cok On time olan en yakin yarihteki ilk 50 yolcuyu yazdir
     private static void case3(Stream<Passenger> passengerStream){
 
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("[MM/dd/yyyy][M/d/yyyy]")
+                .toFormatter();
+
+        passengerStream
+                .filter(passenger -> "On Time".equals(passenger.getFlightStatus()))
+                .sorted(Comparator.comparing((Passenger passenger) -> LocalDate.parse(passenger.getDepartureDate(), formatter)).reversed())
+                .limit(50)
+                .forEach(System.out::println);
+    }
+
+    // case 4
+    private static void case4(Stream<Passenger> passengerStream) {
 
     }
 
