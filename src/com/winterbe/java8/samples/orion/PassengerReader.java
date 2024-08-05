@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +32,11 @@ public class PassengerReader {
 
             System.out.println("CASE 2 ");
             case2(records.stream()
+                    .skip(1)
+                    .map(PassengerReader::parseToPassenger));
+
+            System.out.println("CASE 3 ");
+            case3(records.stream()
                     .skip(1)
                     .map(PassengerReader::parseToPassenger));
 
@@ -60,11 +66,12 @@ public class PassengerReader {
 
     // case 1  japon yolcularin bulundugu havalanlarini ve burda bulunan yolcularin sayisini yazdir
     private static void case1(Stream<Passenger> passengerStream) {
+        Predicate<Passenger> passengerPredicate= passenger -> "Japan".equals(passenger.getNationality());
         passengerStream
-                .filter(passenger -> "Japan".equals(passenger.getNationality()))
+                .filter(passengerPredicate)
                 .collect(Collectors.groupingBy(Passenger::getAirportName, Collectors.counting()))
                 .forEach((k, v) -> {
-                    System.out.println("Airport: " + k + " Count: " + v);
+                        System.out.println("Airport: " + k + " Count: " + v);
                 });
 
     }
@@ -92,7 +99,8 @@ public class PassengerReader {
         passengerStream
                 .filter(passenger -> "On Time".equals(passenger.getFlightStatus()))
                 .sorted(Comparator.comparing((Passenger passenger) -> LocalDate.parse(passenger.getDepartureDate(), formatter)).reversed())
-                .limit(50)
+                .limit(100)
+                .map(passenger -> passenger.getFirstName()+" "+ passenger.getDepartureDate())
                 .forEach(System.out::println);
     }
 
